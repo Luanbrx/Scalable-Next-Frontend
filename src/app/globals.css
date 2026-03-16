@@ -1,17 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@import "tailwindcss";
 
 body {
   background-color: #09090b;
   color: #f4f4f5;
-  font-family: var(--font-geist-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
