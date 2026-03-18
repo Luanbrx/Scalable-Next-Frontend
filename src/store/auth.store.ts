@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import { User } from '@/types';
+import { AuthResponse } from '@/types';
 
 interface AuthState {
-  user: User | null;
+  user: Omit<AuthResponse, 'token'> | null;
   token: string | null;
   isAuthenticated: boolean;
 
-  setAuth: (user: User, token: string) => void;
+  setAuth: (data: AuthResponse) => void;
   clearAuth: () => void;
 }
 
@@ -15,15 +15,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   token: null,
   isAuthenticated: false,
 
-  setAuth: (user, token) => {
-  localStorage.setItem('access_token', token);
-  document.cookie = `access_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}`;
-  set({ user, token, isAuthenticated: true });
-},
+  setAuth: (data) => {
+    localStorage.setItem('access_token', data.token);
+    document.cookie = `access_token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}`;
+    const { token, ...user } = data;
+    set({ user, token, isAuthenticated: true });
+  },
 
-clearAuth: () => {
-  localStorage.removeItem('access_token');
-  document.cookie = 'access_token=; path=/; max-age=0';
-  set({ user: null, token: null, isAuthenticated: false });
-},
+  clearAuth: () => {
+    localStorage.removeItem('access_token');
+    document.cookie = 'access_token=; path=/; max-age=0';
+    set({ user: null, token: null, isAuthenticated: false });
+  },
 }));

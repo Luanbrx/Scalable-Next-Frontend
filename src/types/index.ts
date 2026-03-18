@@ -22,8 +22,11 @@ export interface RegisterDto {
 }
 
 export interface AuthResponse {
-  access_token: string; 
-  user: User;
+  id: number;
+  name: string;
+  email: string;
+  avatar?: string;
+  token: string; // ← era "access_token", agora é "token"
 }
 
 export interface Task {
