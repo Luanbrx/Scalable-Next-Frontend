@@ -19,6 +19,7 @@ export default function DashboardPage() {
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [detailTask, setDetailTask] = useState<Task | null>(null);
 
   const completed = tasks.filter((t) => t.completed).length;
 
@@ -112,15 +113,16 @@ export default function DashboardPage() {
                 {/* Conteúdo */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span
-                      className={`text-sm font-medium transition-all ${
-                        task.completed
-                          ? 'line-through text-zinc-500'
-                          : 'text-zinc-100'
-                      }`}
-                    >
-                      {task.name}
-                    </span>
+                    <button
+                   onClick={() => setDetailTask(task)}
+                   className={`text-sm font-medium transition-all text-left hover:underline ${
+    task.completed
+      ? 'line-through text-zinc-500'
+      : 'text-zinc-100 hover:text-violet-400'
+  }`}
+>
+  {task.name}
+</button>
                     <Badge completed={task.completed} />
                   </div>
                   {task.description && (
@@ -175,6 +177,51 @@ export default function DashboardPage() {
           />
         )}
       </Modal>
+{/* Modal detalhes */}
+<Modal
+  title="Detalhes da tarefa"
+  isOpen={!!detailTask}
+  onClose={() => setDetailTask(null)}
+>
+  {detailTask && (
+    <div className="flex flex-col gap-4">
+      <div>
+        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Nome</p>
+        <p className="text-sm text-zinc-100">{detailTask.name}</p>
+      </div>
+      <div>
+        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Descrição</p>
+        <p className="text-sm text-zinc-100">{detailTask.description}</p>
+      </div>
+      <div>
+        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Status</p>
+        <Badge completed={detailTask.completed} />
+      </div>
+      <div>
+        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Criada em</p>
+        <p className="text-sm text-zinc-400">
+          {new Date(detailTask.createdAt).toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+          })}
+        </p>
+      </div>
+      <div className="flex gap-2 mt-2">
+        <button
+          onClick={() => {
+            setDetailTask(null);
+            setEditingTask(detailTask);
+          }}
+          className="flex-1 py-2 text-sm rounded-lg bg-violet-600 hover:bg-violet-500 text-white transition-colors"
+        >
+          Editar tarefa
+        </button>
+      </div>
+    </div>
+  )}
+</Modal>
+
     </main>
   );
 }
